@@ -1,0 +1,193 @@
+#include <iostream>
+using namespace std;
+
+ class NumDays
+{
+    private:
+    int days; 
+    int hours; 
+    void simplify();
+    
+    public:
+    // Constructor
+    NumDays(int d = 0, int h = 0)
+    { days = d;
+    hours = h;
+    simplify(); }
+    
+    // Mutator functions
+    void setDays(int d)
+    { days = d; }
+    
+    void setHours(int h)
+    { hours = h;
+    simplify(); }
+    
+    // Accessor functions
+    int getDays() const
+    { return days; }
+    
+    int getHours() const
+    { return hours; }
+    
+    // Overloaded operator functions
+    NumDays operator+(const NumDays &); // Overloaded +
+    NumDays operator-(const NumDays &); // Overloaded −
+    NumDays operator++();
+    NumDays operator++(int);
+    NumDays operator--();
+    NumDays operator--(int);
+};
+
+void NumDays::simplify()
+{
+    if (hours >= 24)
+    {
+        days += (hours / 24);
+        hours = hours % 24;
+    }
+    else if (hours < 0)
+    {
+        days -= ((abs(hours) / 24) + 1);
+        hours = 24 - (abs(hours) % 24);
+    }
+}
+
+
+NumDays NumDays::operator + (const NumDays &right)
+{
+    NumDays temp;
+    
+    temp.hours = hours + right.hours;
+    temp.days = days + right.days;
+    temp.simplify();
+    return temp;
+}
+
+NumDays NumDays::operator - (const NumDays &right)
+{
+    NumDays temp;
+
+    temp.hours = hours - right.hours;
+    temp.days = days - right.days;
+    temp.simplify();
+    return temp;
+}
+
+NumDays NumDays::operator++() {
+    
+    hours++;
+    simplify();
+    return *this;
+}
+
+NumDays NumDays::operator++(int)
+{
+    NumDays temp(days, hours);
+    hours++;
+    simplify();
+    return temp;
+}
+
+NumDays NumDays::operator--() {
+    hours--;
+    simplify();
+    return *this;
+}
+
+NumDays NumDays::operator--(int) {
+    NumDays temp(days, hours);
+    hours--;
+    simplify();
+    return temp;
+}
+
+
+int main()
+{
+    NumDays oneDay;
+    int numOfDays, numOfHours, choice;
+    
+    std::cout << "Enter a # of days: ";
+    std::cin >> numOfDays;
+    std::cout << "Enter a # of hrs: ";
+    std::cin >> numOfHours;
+    
+    oneDay.setDays(numOfDays);
+    oneDay.setHours(numOfHours);
+    
+    while (choice != 3) {
+        
+        std::cout << "\nDays: " << oneDay.getDays() << "\n";
+        std::cout << "Hours: " << oneDay.getHours() << "\n\n";
+        
+        std::cout << "1. Combine with another day/hour counter\n2. Increment/Decrement hours";
+        std::cout << "\n3. Quit\n >> ";
+        std::cin >> choice;
+        
+        if (choice == 1) {
+            
+            std::cout << "\nEnter the second day/hour counter:";
+            std::cout << "\nDays: ";
+            std::cin >> numOfDays;
+            std::cout << "Hours: ";
+            std::cin >> numOfHours;
+            std::cout << "\n";
+            
+            NumDays twoDays;
+            twoDays.setDays(numOfDays);
+            twoDays.setHours(numOfHours);
+            
+            int choice1;
+            
+            std::cout << "Would you like to subtract or add them?\n";
+            std::cout << "1. Add\n2. Subtract\n3. Quit to menu\n";
+            std::cout << " >> ";
+            std::cin >> choice1;
+            
+            if (choice1 == 1) {
+                oneDay = oneDay + twoDays;
+            }
+            else if (choice1 == 2) {
+                oneDay = oneDay - twoDays;
+            }
+            else if (choice1 == 3) {
+                std::cout << "Quitting to menu...\n";
+            }
+            else {
+                std::cout << "Invalid input. Quitting to menu...\n";
+            }
+        }
+        else if (choice == 2) {
+            
+            int choice2;
+            int iterations;
+            
+            std::cout << "\nBy how many hours do you want to change the value";
+            std::cout << " of your day/hour counter?\n >> ";
+            std::cin >> iterations;
+            std::cout << "\nWould you like to increment or decrement by ";
+            std::cout << iterations << "?\n";
+            std::cout << "1. Increment\n2. Decrement\n3. Quit to menu\n >> ";
+            std::cin >> choice2;
+            
+            if (choice2 == 3) {
+                std::cout << "Quitting to menu...\n";
+            }
+            
+            for (int i = 0; i < iterations; i++) {
+                if (choice2 == 1)
+                    oneDay++;
+                else if (choice2 == 2)
+                    oneDay--;
+                else
+                    break;
+            }
+        }
+    }
+    
+    std::cout << "\nHave a nice day!\n";
+    
+    
+    return 0;
+}
